@@ -64,14 +64,17 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
-  const updateUser = useCallback((user: User) => {
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+  const updateUser = useCallback(
+    (user: User) => {
+      localStorage.setItem('@GoBarber:user', JSON.stringify(user));
 
-    setData({
-      token: data.token,
-      user,
-    });
-  }, []);
+      setData({
+        token: data.token,
+        user,
+      });
+    },
+    [data],
+  );
 
   return (
     <AuthContext.Provider
