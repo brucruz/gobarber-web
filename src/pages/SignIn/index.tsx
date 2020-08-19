@@ -1,9 +1,10 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useMemo } from 'react';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import qs from 'qs';
 
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
@@ -21,6 +22,13 @@ interface SignInFormData {
   password: string;
 }
 
+interface QueryParamsInput {
+  ids: string[];
+  add: string;
+  lat: string;
+  lng: string;
+}
+
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
@@ -29,9 +37,39 @@ const SignIn: React.FC = () => {
 
   const history = useHistory();
 
+  const isArray = (arr: any): arr is Array<string> => {
+    return !!arr.length;
+  };
+
   // added code
   const location = useLocation();
-  const queryParams = location.search;
+  const queryParams = useMemo((): QueryParamsInput | undefined => {
+    const adjust = location.search.replace('?', '');
+
+    const { ids, add, lat, lng } = qs.parse(adjust);
+
+    if (ids) {
+      if (
+        !isArray(ids) ||
+        !(typeof add === 'string') ||
+        !(typeof lat === 'string') ||
+        !(typeof lng === 'string')
+      ) {
+        return;
+      }
+    } else {
+      return;
+    }
+
+    const params = {
+      ids,
+      add,
+      lat,
+      lng,
+    };
+
+    return params;
+  }, [location]);
 
   console.log(queryParams);
   // end of added code
