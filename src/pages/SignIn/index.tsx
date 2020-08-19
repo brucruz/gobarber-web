@@ -3,7 +3,7 @@ import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
@@ -28,6 +28,13 @@ const SignIn: React.FC = () => {
   const { addToast } = useToast();
 
   const history = useHistory();
+
+  // added code
+  const location = useLocation();
+  const queryParams = location.search;
+
+  console.log(queryParams);
+  // end of added code
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
